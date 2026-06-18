@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__quiz-it__get_random_question",
+      "Bash(node -e \"const q=require\\('d:/Working/GitHub/MCP-Server/src/data/questions.json'\\); const r=q[Math.floor\\(Math.random\\(\\)*q.length\\)]; delete r.correctAnswer; delete r.explanation; console.log\\(JSON.stringify\\(r,null,2\\)\\)\")"
+    ]
+  }
+}
