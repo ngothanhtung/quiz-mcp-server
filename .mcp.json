@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "fb-page": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "D:/Working/GitHub/MCP-Server/build/mcp-facebook-stdio-server.js"
+      ],
+      "env": {
+        "FB_PAGE_ID": "102378547972733",
+        "FB_PAGE_ACCESS_TOKEN": "EAANQ77sdaGMBR1BcxL5IYbV0Nhti9rUrnESVvugaIK4D1I6Qg2CmTdklZAXZBhwEDHtkTXrJ4AYQE8Wgs2ZADgSLkEWhjbGcv7ZBChNmSQDxZArwYRhqMFpIZBAJZCJwwHrzHUTWZCkKafoV2C6WxHFPu15V2v8715hMmmfULdz8kjQa9wMSLzGDXbVawRaIfrZAG"
+      }
+    }
+  }
+}

@@ -1,114 +1,89 @@
-# MCP Quiz Server - 100 Câu Trắc Nghiệm IT
+# mcp-fb-page
 
-MCP Server với 100 câu hỏi trắc nghiệm lập trình/IT — chạy 2 chế độ: **REST API** (Express) và **MCP Protocol** (dùng với Claude Desktop).
+MCP server for managing Facebook Page posts — create, read, update, delete, and get insights.
 
-## Cài đặt
+Works with any MCP client: Claude Desktop, Claude Code, Cline, Cursor, etc.
 
-```bash
-npm install
-npm run build
-```
-
-## Chế độ 1: REST API (Express)
+## Setup
 
 ```bash
-npm start
-# Server chạy tại http://localhost:3000
+npm install -g mcp-fb-page
 ```
 
-### Endpoints
+Or use directly with `npx` (see config examples below).
 
-| Method | Endpoint                                    | Mô tả                               |
-| ------ | ------------------------------------------- | ----------------------------------- |
-| GET    | `/api/questions`                            | Tất cả câu hỏi (ẩn đáp án)          |
-| GET    | `/api/questions/random?category=JavaScript` | 1 câu ngẫu nhiên                    |
-| GET    | `/api/questions/categories`                 | Danh mục + số lượng                 |
-| GET    | `/api/questions/category/:cat?limit=5`      | Câu hỏi theo danh mục               |
-| GET    | `/api/questions/:id`                        | Câu hỏi theo ID                     |
-| POST   | `/api/questions/:id/check`                  | Kiểm tra đáp án `{ "answer": "C" }` |
+## Prerequisites
 
----
+You need:
+- A **Facebook Page** (any type)
+- A **Page Access Token** with permissions: `pages_manage_posts`, `pages_read_engagement`
 
-## Chế độ 2: MCP Server (Claude Desktop)
+### Get your token
 
-### Cách tích hợp với Claude Desktop
+1. Go to [Graph API Explorer](https://developers.facebook.com/tools/explorer)
+2. Select your app, then "Get User Access Token" with `pages_manage_posts` + `pages_read_engagement`
+3. Exchange for a long-lived token: `GET /oauth/access_token?grant_type=fb_exchange_token&client_id=...&client_secret=...&fb_exchange_token=...`
+4. Get Page token: `GET /me/accounts?access_token=...`
 
-**Bước 1:** Mở file config của Claude Desktop:
+## Configuration
 
-```text
-C:\Users\Tony\AppData\Roaming\Claude\claude_desktop_config.json
-```
+### Option 1: Env vars (recommended)
 
-> Nếu file chưa có, tạo mới với nội dung `{}`.
+Set `FB_PAGE_ID` and `FB_PAGE_ACCESS_TOKEN` as environment variables in your MCP client config.
 
-**Bước 2:** Thêm cấu hình MCP server:
+### Option 2: Runtime config
+
+Leave env vars empty, then call `fb_set_config` tool in chat to provide Page ID + token at runtime.
+
+## MCP Client Config
+
+### Claude Desktop / Claude Code
+
+Add to your `claude_desktop_config.json` or `.mcp.json`:
 
 ```json
 {
   "mcpServers": {
-    "quiz-it": {
-      "command": "node",
-      "args": [
-        "D:\\Working\\GitHub\\MCP-Server\\build\\mcp-stdio-server.js"
-      ]
+    "fb-page": {
+      "command": "npx",
+      "args": ["-y", "mcp-fb-page"],
+      "env": {
+        "FB_PAGE_ID": "your_page_id",
+        "FB_PAGE_ACCESS_TOKEN": "your_long_lived_token"
+      }
     }
   }
 }
 ```
 
-> ⚠️ **Lưu ý:** Nếu đã có các server khác trong config, thêm `"quiz-it"` vào object `mcpServers` đã có.
+### Cline / Cursor / Roo Code / Kilo
 
-**Bước 3:** **Restart Claude Desktop** (đóng hoàn toàn và mở lại).
+Same config object — add to the MCP servers section of each tool's settings.
 
-**Bước 4:** Mở Claude Desktop — icon 🔧 sẽ hiển thị ở góc dưới bên phải nếu MCP server hoạt động thành công. Nhấp vào để xem các tools có sẵn.
+## Tools
 
-### Tools có sẵn trong MCP
+| Tool | Description |
+|------|-------------|
+| `fb_set_config` | Set Page ID + Access Token at runtime |
+| `fb_create_post` | Create a new post (text, link, or photo) |
+| `fb_get_post` | Get post details by ID |
+| `fb_update_post` | Edit post message |
+| `fb_delete_post` | Delete a post (irreversible) |
+| `fb_list_posts` | List recent posts (with pagination) |
+| `fb_get_insights` | Get post analytics (impressions, reach, engagements, etc.) |
 
-| Tool                  | Mô tả                                               |
-| --------------------- | --------------------------------------------------- |
-| `get_questions`       | Lấy danh sách câu hỏi (có thể lọc theo category)    |
-| `get_random_question` | Lấy 1 câu hỏi ngẫu nhiên (có thể lọc theo category) |
-| `get_question_by_id`  | Lấy câu hỏi theo ID (1-100)                         |
-| `check_answer`        | Kiểm tra đáp án với id câu hỏi và A/B/C/D           |
-| `list_categories`     | Liệt kê tất cả danh mục                             |
-
-### Ví dụ sử dụng trong Claude Desktop
-
-Sau khi tích hợp, bạn có thể chat với Claude Desktop:
-
-- _"Cho mình 5 câu hỏi JavaScript ngẫu nhiên"_
-- _"Kiểm tra câu hỏi ID 15 đáp án B"_
-- _"Bắt đầu quiz 10 câu về Python"_
-- _"Có bao nhiêu câu hỏi về networking?"_
-
-Claude sẽ tự động gọi đúng tool để trả lời bạn.
-
-### Kiểm tra MCP server chạy standalone
+## Build from source
 
 ```bash
-# Test trực tiếp từ terminal
+git clone <repo-url>
+cd mcp-fb-page
+npm install
 npm run build
-npm run mcp:stdio
 ```
-
----
-
-## Danh mục câu hỏi
-
-| Danh mục   | Số câu |
-| ---------- | ------ |
-| JavaScript | 20     |
-| Python     | 15     |
-| HTML/CSS   | 13     |
-| SQL        | 8      |
-| Networking | 7      |
-| OOP        | 7      |
-| General IT | 15     |
 
 ## Tech Stack
 
 - **Runtime:** Node.js 18+
 - **MCP SDK:** `@modelcontextprotocol/sdk` v1.29
-- **Framework:** ExpressJS 4 (REST mode)
 - **Validation:** Zod
-- **Data:** JSON (100 câu hỏi)
+- **API:** Facebook Graph API v25.0

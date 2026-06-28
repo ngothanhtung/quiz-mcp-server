@@ -1,32 +1,36 @@
 {
-  "name": "mcp-server",
+  "name": "mcp-fb-page",
   "version": "1.0.0",
-  "description": "",
-  "main": "build/index.js",
+  "description": "MCP server for managing Facebook Page posts — create, read, update, delete, and get insights",
   "type": "module",
   "bin": {
-    "mcp-quiz-server": "./build/mcp-stdio-server.js"
+    "mcp-fb-page": "./build/mcp-facebook-stdio-server.js"
   },
+  "files": [
+    "build/",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
-    "start": "node build/index.js",
-    "mcp:stdio": "node build/mcp-stdio-server.js",
-    "mcp:http": "node build/mcp-http-server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "bundle": "esbuild src/mcp-facebook-stdio-server.ts --bundle --platform=node --format=esm --outfile=build/mcp-fb-page.js",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": [],
+  "keywords": [
+    "mcp",
+    "facebook",
+    "facebook-page",
+    "modelcontextprotocol"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
-    "cors": "^2.8.6",
-    "express": "^4.22.2",
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
     "@types/node": "^25.9.3",
+    "esbuild": "^0.28.1",
     "typescript": "^6.0.3"
   }
 }

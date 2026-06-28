@@ -1,0 +1,11 @@
+{
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "quiz-it"
+  ],
+  "permissions": {
+    "allow": [
+      "Bash(node -p \"JSON.stringify\\(require\\('./package.json'\\).bin, null, 2\\)\")"
+    ]
+  }
+}
